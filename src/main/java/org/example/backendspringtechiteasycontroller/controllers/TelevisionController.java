@@ -19,6 +19,7 @@ public class TelevisionController {
 
     @PostMapping("/add")
     public ResponseEntity<Television> createTelevision(@RequestBody Television television) {
+        validateTelevisionInput(television);
 
         television.setId(currentId++);
         televisions.add(television);
@@ -41,6 +42,8 @@ public class TelevisionController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateTelevision(@PathVariable long id, @RequestBody Television television) {
         Television foundTelevision = findTelevisionById(id);
+
+        validateTelevisionInput(television);
 
         foundTelevision.setBrand(television.getBrand());
         foundTelevision.setModel(television.getModel());
