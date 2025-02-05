@@ -1,5 +1,6 @@
 package org.example.backendspringtechiteasycontroller.controllers;
 
+import org.example.backendspringtechiteasycontroller.exceptions.RecordNotFoundException;
 import org.example.backendspringtechiteasycontroller.models.Television;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,64 +12,54 @@ import java.util.List;
 @RestController
 @RequestMapping("/televisions")
 public class TelevisionController {
+
     List<Television> televisions = new ArrayList<Television>();
-    int currentId = 0;
+    long currentId = 0;
 
     @PostMapping("/add")
     public ResponseEntity<Television> createTelevision(@RequestBody Television television) {
         television.setId(currentId++);
-        this.televisions.add(television);
-        return new ResponseEntity<>(television, HttpStatus.CREATED);
+        televisions.add(television);
+        return ResponseEntity.created(null).body(television);
     }
 
     @GetMapping()
     public ResponseEntity<List<Television>> getAllTelevisions() {
-        if(!televisions.isEmpty()) {
-            return new ResponseEntity<>(this.televisions, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+            return ResponseEntity.ok(this.televisions);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Television> getTelevisionById(@PathVariable int id) {
-        Television selectedTelevision = findTelevisionById(id);
-        if(selectedTelevision != null) {
-            return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Television> getTelevisionById(@PathVariable long id) {
+        Television foundTelevision = findTelevisionById(id);
+
+        return ResponseEntity.ok(foundTelevision);
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Television> updateTelevision(@PathVariable int id, @RequestBody Television television) {
-        Television selectedTelevision = findTelevisionById(id);
-        if(selectedTelevision == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> updateTelevision(@PathVariable long id, @RequestBody Television television) {
+        Television foundTelevision = findTelevisionById(id);
 
-        selectedTelevision.setBrand(television.getBrand());
-        selectedTelevision.setModel(television.getModel());
-        selectedTelevision.setPrice(television.getPrice());
+        foundTelevision.setBrand(television.getBrand());
+        foundTelevision.setModel(television.getModel());
 
-        return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
+        return ResponseEntity.ok("Succesvol aangepast");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Television> deleteTelevision(@PathVariable int id) {
-        Television selectedTelevision = findTelevisionById(id);
-        if(selectedTelevision == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        this.televisions.remove(selectedTelevision);
-        return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
+    public ResponseEntity<Void> deleteTelevision(@PathVariable long id) {
+        Television foundTelevision = findTelevisionById(id);
+        televisions.remove(foundTelevision);
+        return ResponseEntity.noContent().build();
     }
 
+    public Television findTelevisionById(long id) {
 
-    public Television findTelevisionById(int id) {
-        for(Television television : televisions) {
+        for(Television television : televisions) {                                                                      // Searching the list of televisions for the object that corresponds with the given id
             if(television.getId() == id) {
-                return television;
+                return television;                                                                                      // When the object is found return it and leave the function
             }
         }
-        return null;
+        throw new RecordNotFoundException(id);                                                                          // If no object can be found with the corresponding Id Throw not found error.
     }
-
 }
