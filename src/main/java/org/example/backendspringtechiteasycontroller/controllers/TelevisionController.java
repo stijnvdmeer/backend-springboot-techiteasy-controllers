@@ -32,7 +32,7 @@ public class TelevisionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Television> getTelevisionById(@PathVariable int id) {
-        Television selectedTelevision = this.televisions.get(id);
+        Television selectedTelevision = findTelevisionById(id);
         if(selectedTelevision != null) {
             return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
         } else {
@@ -42,7 +42,7 @@ public class TelevisionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Television> updateTelevision(@PathVariable int id, @RequestBody Television television) {
-        Television selectedTelevision = this.televisions.get(id);
+        Television selectedTelevision = findTelevisionById(id);
         if(selectedTelevision == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         selectedTelevision.setBrand(television.getBrand());
@@ -54,7 +54,7 @@ public class TelevisionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Television> deleteTelevision(@PathVariable int id) {
-        Television selectedTelevision = this.televisions.get(id);
+        Television selectedTelevision = findTelevisionById(id);
         if(selectedTelevision == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         this.televisions.remove(selectedTelevision);
