@@ -40,6 +40,27 @@ public class TelevisionController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Television> updateTelevision(@PathVariable int id, @RequestBody Television television) {
+        Television selectedTelevision = this.televisions.get(id);
+        if(selectedTelevision == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        selectedTelevision.setBrand(television.getBrand());
+        selectedTelevision.setModel(television.getModel());
+        selectedTelevision.setPrice(television.getPrice());
+
+        return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Television> deleteTelevision(@PathVariable int id) {
+        Television selectedTelevision = this.televisions.get(id);
+        if(selectedTelevision == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        this.televisions.remove(selectedTelevision);
+        return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
+    }
+
 
     public Television findTelevisionById(int id) {
         for(Television television : televisions) {
