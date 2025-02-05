@@ -1,6 +1,7 @@
 package org.example.backendspringtechiteasycontroller.controllers;
 
 import org.example.backendspringtechiteasycontroller.exceptions.RecordNotFoundException;
+import org.example.backendspringtechiteasycontroller.exceptions.TooManyCharsException;
 import org.example.backendspringtechiteasycontroller.models.Television;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ public class TelevisionController {
 
     @PostMapping("/add")
     public ResponseEntity<Television> createTelevision(@RequestBody Television television) {
+
         television.setId(currentId++);
         televisions.add(television);
         return ResponseEntity.created(null).body(television);
@@ -61,5 +63,10 @@ public class TelevisionController {
             }
         }
         throw new RecordNotFoundException(id);                                                                          // If no object can be found with the corresponding Id Throw not found error.
+    }
+
+    public void validateTelevisionInput (Television television) {
+        if(television.getBrand().length() > 20) throw new TooManyCharsException(0, "Brand");
+        if(television.getModel().length() > 20) throw new TooManyCharsException(0, "Model");
     }
 }
