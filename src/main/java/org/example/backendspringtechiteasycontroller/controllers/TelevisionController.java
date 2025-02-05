@@ -24,13 +24,13 @@ public class TelevisionController {
     @GetMapping()
     public ResponseEntity<List<Television>> getAllTelevisions() {
         if(!televisions.isEmpty()) {
-            return new ResponseEntity<>(televisions, HttpStatus.OK);
+            return new ResponseEntity<>(this.televisions, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @GetMapping("/{id")
+    @GetMapping("/{id}")
     public ResponseEntity<Television> getTelevisionById(@PathVariable int id) {
         Television selectedTelevision = this.televisions.get(id);
         if(selectedTelevision != null) {
