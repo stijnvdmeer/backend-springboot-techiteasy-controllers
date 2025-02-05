@@ -1,23 +1,24 @@
 package org.example.backendspringtechiteasycontroller.models;
 
 public class Television {
-    private static int id;
+    private int id;
     private String brand;
     private String model;
     private double price;
 
-    public Television(String brand, String model, double price) {
+    public Television(int id, String brand, String model, double price) {
+        this.id = id;
         this.brand = brand;
         this.model = model;
         this.price = price;
     }
 
-    public static int getId() {
+    public int getId() {
         return id;
     }
 
-    public static void setId(int id) {
-        Television.id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBrand() {
