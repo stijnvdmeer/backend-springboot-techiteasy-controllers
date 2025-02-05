@@ -7,10 +7,17 @@ public class Television {
     private double price;
 
     public Television(String brand, String model, double price) {
-        this.id = id++;
         this.brand = brand;
         this.model = model;
         this.price = price;
+    }
+
+    public static int getId() {
+        return id;
+    }
+
+    public static void setId(int id) {
+        Television.id = id;
     }
 
     public String getBrand() {

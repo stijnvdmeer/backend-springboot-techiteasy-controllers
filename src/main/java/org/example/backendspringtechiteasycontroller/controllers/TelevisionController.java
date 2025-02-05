@@ -12,9 +12,11 @@ import java.util.List;
 @RequestMapping("/televisions")
 public class TelevisionController {
     List<Television> televisions = new ArrayList<Television>();
+    int currentId = 0;
 
     @PostMapping("/add")
     public ResponseEntity<Television> createTelevision(@RequestBody Television television) {
+        television.setId(currentId++);
         this.televisions.add(television);
         return new ResponseEntity<>(television, HttpStatus.CREATED);
     }
@@ -26,6 +28,26 @@ public class TelevisionController {
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+
+    @GetMapping("/{id")
+    public ResponseEntity<Television> getTelevisionById(@PathVariable int id) {
+        Television selectedTelevision = this.televisions.get(id);
+        if(selectedTelevision != null) {
+            return new ResponseEntity<>(selectedTelevision, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    public Television findTelevisionById(int id) {
+        for(Television television : televisions) {
+            if(television.getId() == id) {
+                return television;
+            }
+        }
+        return null;
     }
 
 }
